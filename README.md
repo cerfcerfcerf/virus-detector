@@ -1,94 +1,112 @@
-# Intelligent File Risk Analyzer (Heuristic-Based)
+# File Risk Analyzer (Heuristic-Based)
 
 ## Overview
-This project is an offline desktop application written in Python that analyzes files
-and estimates their **risk level** using heuristic and rule-based techniques.
+**File Risk Analyzer** is an offline desktop application written in Python that
+inspects files and estimates their **risk level** using heuristic analysis.
 
-The tool does **not** claim to be a traditional antivirus. Instead, it highlights
-**suspicious indicators** commonly associated with malware, riskware, cheats,
-and obfuscated software, and explains *why* a file may be considered risky.
+The application does **not** claim to be an antivirus or malware detector.
+Instead, it identifies **suspicious indicators** commonly associated with malware,
+riskware, cheats, injectors, and obfuscated software, and explains *why* a file
+may be risky.
 
-The main goal of the project is **explainable decision-making**, helping users
-understand potential risks before executing unknown files.
+The main focus of this project is **explainability**, transparency, and safe
+decision support.
 
 ---
 
-## Why This Project Matters
-Many users download files from the internet (executables, scripts, documents)
-without knowing whether they are safe. Professional antivirus solutions are often
-black-box systems that provide little explanation for their decisions.
+## Purpose and Motivation
+Many users download executables, scripts, and documents without understanding
+the potential risks. Traditional antivirus solutions often provide a simple
+“safe / unsafe” verdict without explanation.
 
-This project focuses on:
-- transparency instead of certainty
-- education instead of automation
-- understanding risk signals rather than making absolute claims
+This project was created to:
+- show *which signals* make a file suspicious
+- avoid black-box decision making
+- support learning and research
+- help users decide what to do **before executing a file**
 
-Such tools are useful for **students, researchers, and non-technical users**
-who want to understand *why* a file may be suspicious.
+---
+
+## What This Tool Is
+- A **heuristic file risk analyzer**
+- An **offline inspection tool**
+- An **educational and research project**
+- A system that highlights **risk signals**, not absolute truth
+
+## What This Tool Is Not
+- Not an antivirus
+- Not a signature-based malware scanner
+- Not a guarantee that a file is safe or malicious
 
 ---
 
 ## Key Features
-- Offline file analysis (no file uploads, no cloud dependency)
-- Binary-safe file handling (raw bytes, no execution)
-- Incremental cryptographic hashing (SHA-256, MD5)
-- File type detection using magic bytes and extensions
-- Entropy-based analysis for packed/encrypted content
+- Offline analysis (no file uploads, no cloud services)
+- Binary-safe file handling (files are never executed)
+- Incremental cryptographic hashing:
+  - SHA-256
+  - MD5
+- File type identification using:
+  - magic bytes
+  - file extension comparison
+- Entropy analysis to detect packed or encrypted content
+- Printable string extraction
 - Heuristic rule engine with weighted scoring
-- Categorization of findings (malware-like vs riskware/cheat-like behavior)
-- Explainable results in plain language
-- Responsive GUI with background scanning thread
-- Recent files history with quick access
+- Risk level classification:
+  - Low
+  - Medium
+  - High
+- Human-readable explanations for each finding
+- Recommendations based on risk level
+- Responsive GUI (background scanning thread)
+- Recent files list with quick access
+- Open file location directly in Windows Explorer
 - Exportable scan reports (JSON)
-- External validation links (manual verification)
+- Manual external validation via VirusTotal link
 
 ---
 
-## What This Tool Is (and Is Not)
+## About Risk Scores and False Positives
+This application uses **heuristics**, not signatures or reputation databases.
 
-### ✔ What It Is
-- A **file risk analyzer**
-- A **heuristic inspection tool**
-- An **educational and research project**
-- A system that highlights suspicious *signals*
+Because of this:
+- Some files may be flagged as risky even if they are not actively malicious
+- Tools such as game cheats, injectors, debuggers, and cracks often trigger
+  warnings because they use techniques similar to malware
+- Some malicious files may appear safe if they lack obvious indicators
 
-### ✘ What It Is Not
-- Not a replacement for antivirus software
-- Not a signature-based malware detector
-- Not a guarantee that a file is safe or unsafe
+Differences between this tool and VirusTotal are expected because:
+- VirusTotal uses antivirus signatures and reputation
+- This tool relies on local feature analysis only
 
----
-
-## About False Positives and VirusTotal Differences
-This tool may sometimes flag files that appear safe according to VirusTotal,
-and sometimes miss files that VirusTotal flags.
-
-This happens because:
-- VirusTotal relies on signature databases and reputation
-- This project relies on **local heuristics and feature patterns**
-- Tools such as game cheats, injectors, cracks, and debuggers often use
-  techniques similar to malware (process injection, obfuscation, networking)
-
-As a result, such files are categorized as **riskware** or **cheat-like behavior**
-rather than automatically labeled as malicious.
-
-A file that did not visibly harm the system may still contain risky behavior,
-and a flagged file is not automatically malicious.
+A file that did not visibly harm the system may still contain risky behavior.
+A flagged file is **not automatically malware**.
 
 ---
 
 ## How the System Works (High-Level)
-1. The user selects a file to scan.
-2. The file is opened in binary mode and never executed.
-3. Cryptographic hashes are calculated incrementally.
-4. File type is identified using magic bytes and extension comparison.
-5. Features are extracted:
+1. User selects a file or drags it into the application
+2. File is opened in binary mode and never executed
+3. Hashes are calculated incrementally
+4. File type is determined using magic bytes and extensions
+5. Content is read in a size-aware manner
+6. Features are extracted:
    - entropy
    - printable strings
    - structural metadata
-6. Heuristic detection rules are applied.
-7. A weighted risk score is calculated.
-8. Results are presented with explanations and safe next steps.
+7. Heuristic rules are applied
+8. A weighted risk score is calculated
+9. Results are presented with explanations and recommendations
+
+---
+
+## Advanced Mode
+When enabled, the analyzer additionally:
+- attempts limited decoding of encoded-looking strings
+- performs lightweight executable metadata checks
+- applies extra heuristic rules
+
+Advanced mode is optional and increases analysis depth.
 
 ---
 
@@ -96,7 +114,7 @@ and a flagged file is not automatically malicious.
 - Python 3.12
 - PyQt5 (desktop GUI)
 - Multithreading (QThread)
-- Standard cryptography and binary analysis techniques
+- Standard Python libraries for cryptography and binary analysis
 
 ---
 
@@ -105,5 +123,5 @@ and a flagged file is not automatically malicious.
 ```bash
 python -m venv venv
 venv\Scripts\activate
-python -m pip install -r requirements.txt
-python src/detector.py
+python -m pip install PyQt5
+python detector.py
